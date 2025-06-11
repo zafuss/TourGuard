@@ -76,11 +76,6 @@ jobs:
           cd mobile
           flutter build appbundle
 
-      - name: Build iOS app
-        run: |
-          cd mobile
-          flutter build ios
-
   deploy:
     needs: build
     if: github.ref == 'refs/heads/main'
