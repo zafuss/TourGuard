@@ -30,7 +30,7 @@ jobs:
         run: cd mobile && flutter pub get
 
       - name: Run backend tests
-        run: npm test
+        run: cd backend && npm test
 
       - name: Run Flutter tests
         run: |
