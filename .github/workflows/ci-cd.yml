@@ -17,16 +17,17 @@ jobs:
         with:
           node-version: "18"
 
+      - name: Install backend dependencies
+        run: npm install
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.x"
           channel: "stable"
 
-      - name: Install dependencies
-        run: |
-          npm install
-          cd mobile && flutter pub get
+      - name: Install Flutter dependencies
+        run: cd mobile && flutter pub get
 
       - name: Run backend tests
         run: npm test
