@@ -99,7 +99,7 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/
-          kubectl set image deployment/tourguard-backend tourguard-backend=your-registry/tourguard-backend:latest
+          kubectl set image deployment/tourguard-backend tourguard-backend=zafus/tourguard-backend:latest
 
       - name: Verify deployment
         run: |
