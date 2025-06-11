@@ -23,11 +23,25 @@ jobs:
           ls -l backend/
           cd backend && npm install
 
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.x"
+          channel: "stable"
+
+      - name: Install Flutter dependencies
+        run: cd mobile && flutter pub get
+
       - name: Run backend tests
         run: |
           pwd
           ls -l backend/
           cd backend && npm test
+
+      - name: Run Flutter tests
+        run: |
+          cd mobile
+          flutter test
 
   build:
     needs: test
@@ -49,11 +63,22 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: [zafus/tourguard-backend:latest]
+          tags: zafus/tourguard-backend:latest
+
+      - name: Build Flutter app
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.x"
+          channel: "stable"
+
+      - name: Build Android app
+        run: |
+          cd mobile
+          flutter build appbundle
 
   deploy:
     needs: build
-    if: false
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
