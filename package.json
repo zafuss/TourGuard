@@ -1,0 +1,23 @@
+{
+  "name": "tourguard",
+  "version": "1.0.0",
+  "description": "Tour group management system with real-time location tracking",
+  "private": true,
+  "scripts": {
+    "prepare": "husky install",
+    "commit": "git-cz",
+    "lint": "commitlint --edit"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.0.0",
+    "@commitlint/config-conventional": "^17.0.0",
+    "husky": "^8.0.0",
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+} 
