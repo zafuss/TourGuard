@@ -6,7 +6,7 @@
 
 - Docker and Docker Compose
 - Kubernetes cluster
-- PostgreSQL 13+
+- MongoDB 6.0+
 - Node.js 16+
 - Flutter SDK
 - Firebase project setup
@@ -17,7 +17,7 @@
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   Flutter   │     │   Node.js   │     │ PostgreSQL  │
+│   Flutter   │     │   Node.js   │     │   MongoDB   │
 │   Mobile    │◄────┤   Backend   │◄────┤   Database  │
 └─────────────┘     └─────────────┘     └─────────────┘
 ```
@@ -26,7 +26,7 @@
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   Flutter   │     │  Kubernetes │     │ PostgreSQL  │
+│   Flutter   │     │  Kubernetes │     │   MongoDB   │
 │   Mobile    │◄────┤   Cluster   │◄────┤   Database  │
 └─────────────┘     └─────────────┘     └─────────────┘
 ```
@@ -50,13 +50,13 @@
 
 #### 2. Database Setup
 
-1. Initialize PostgreSQL:
+1. Initialize MongoDB:
    ```bash
-   kubectl apply -f k8s/postgres-deployment.yaml
+   kubectl apply -f k8s/mongodb-deployment.yaml
    ```
-2. Run migrations:
+2. Create indexes:
    ```bash
-   kubectl exec -it tourguard-backend -- npm run migrate
+   kubectl exec -it tourguard-backend -- npm run create-indexes
    ```
 
 #### 3. Mobile App Deployment
@@ -119,7 +119,7 @@ jobs:
 
 - API response times
 - WebSocket connections
-- Database performance
+- MongoDB performance metrics
 - System resources
 
 #### ELK Stack
@@ -135,7 +135,7 @@ jobs:
 
 - Docker và Docker Compose
 - Cụm Kubernetes
-- PostgreSQL 13+
+- MongoDB 6.0+
 - Node.js 16+
 - Flutter SDK
 - Thiết lập dự án Firebase
@@ -146,7 +146,7 @@ jobs:
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   Flutter   │     │   Node.js   │     │ PostgreSQL  │
+│   Flutter   │     │   Node.js   │     │   MongoDB   │
 │   Mobile    │◄────┤   Backend   │◄────┤   Database  │
 └─────────────┘     └─────────────┘     └─────────────┘
 ```
@@ -155,7 +155,7 @@ jobs:
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   Flutter   │     │  Kubernetes │     │ PostgreSQL  │
+│   Flutter   │     │  Kubernetes │     │   MongoDB   │
 │   Mobile    │◄────┤   Cluster   │◄────┤   Database  │
 └─────────────┘     └─────────────┘     └─────────────┘
 ```
@@ -179,13 +179,13 @@ jobs:
 
 #### 2. Thiết Lập Cơ Sở Dữ Liệu
 
-1. Khởi tạo PostgreSQL:
+1. Khởi tạo MongoDB:
    ```bash
-   kubectl apply -f k8s/postgres-deployment.yaml
+   kubectl apply -f k8s/mongodb-deployment.yaml
    ```
-2. Chạy migrations:
+2. Tạo các chỉ mục:
    ```bash
-   kubectl exec -it tourguard-backend -- npm run migrate
+   kubectl exec -it tourguard-backend -- npm run create-indexes
    ```
 
 #### 3. Triển Khai Ứng Dụng Di Động
@@ -248,12 +248,5 @@ jobs:
 
 - Thời gian phản hồi API
 - Kết nối WebSocket
-- Hiệu suất cơ sở dữ liệu
+- Hiệu suất MongoDB
 - Tài nguyên hệ thống
-
-#### ELK Stack
-
-- Log ứng dụng
-- Theo dõi lỗi
-- Hoạt động người dùng
-- Metrics hiệu suất

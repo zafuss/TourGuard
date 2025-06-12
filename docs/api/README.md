@@ -22,7 +22,7 @@ Response:
 {
   "token": "string",
   "user": {
-    "id": "string",
+    "_id": "string",
     "email": "string",
     "name": "string",
     "role": "string"
@@ -50,11 +50,46 @@ Content-Type: application/json
 }
 ```
 
+Response:
+
+```json
+{
+  "_id": "string",
+  "name": "string",
+  "description": "string",
+  "maxDistance": number,
+  "createdBy": "string",
+  "members": [],
+  "settings": {
+    "notifyOnDistanceExceeded": boolean,
+    "notifyOnMemberLeft": boolean
+  },
+  "createdAt": "string",
+  "updatedAt": "string"
+}
+```
+
 #### Get Group Members
 
 ```http
 GET /api/groups/{groupId}/members
 Authorization: Bearer <token>
+```
+
+Response:
+
+```json
+{
+  "members": [
+    {
+      "userId": "string",
+      "role": "string",
+      "status": "string",
+      "joinedAt": "string",
+      "leftAt": "string"
+    }
+  ]
+}
 ```
 
 #### Add Member to Group
@@ -80,8 +115,10 @@ Authorization: Bearer <token>
 Content-Type: application/json
 
 {
-  "latitude": number,
-  "longitude": number,
+  "location": {
+    "type": "Point",
+    "coordinates": [longitude, latitude]
+  },
   "accuracy": number,
   "timestamp": "string"
 }
@@ -94,6 +131,26 @@ GET /api/groups/{groupId}/locations
 Authorization: Bearer <token>
 ```
 
+Response:
+
+```json
+{
+  "locations": [
+    {
+      "_id": "string",
+      "userId": "string",
+      "groupId": "string",
+      "location": {
+        "type": "Point",
+        "coordinates": [longitude, latitude]
+      },
+      "accuracy": number,
+      "timestamp": "string"
+    }
+  ]
+}
+```
+
 ### Notifications
 
 #### Get Notifications
@@ -101,6 +158,24 @@ Authorization: Bearer <token>
 ```http
 GET /api/notifications
 Authorization: Bearer <token>
+```
+
+Response:
+
+```json
+{
+  "notifications": [
+    {
+      "_id": "string",
+      "userId": "string",
+      "groupId": "string",
+      "type": "string",
+      "message": "string",
+      "read": boolean,
+      "createdAt": "string"
+    }
+  ]
+}
 ```
 
 #### Mark Notification as Read

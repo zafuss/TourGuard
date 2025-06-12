@@ -22,6 +22,7 @@ jobs:
           pwd
           ls -l backend/
           cd backend && npm install
+          npm install mongodb mongoose
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2

@@ -8,7 +8,7 @@
 
 1. Install Flutter SDK
 2. Install Node.js and npm
-3. Install PostgreSQL
+3. Install MongoDB
 4. Install Docker and Docker Compose
 5. Install Android Studio / Xcode
 6. Install VS Code with recommended extensions
@@ -22,6 +22,7 @@
 - GitLens
 - Docker
 - Kubernetes
+- MongoDB for VS Code
 
 ### Project Structure
 
@@ -111,11 +112,12 @@ npm run test:e2e
 
 #### Database
 
-1. Use migrations for schema changes
-2. Implement proper indexing
-3. Optimize queries
-4. Use transactions where appropriate
-5. Implement proper backup strategy
+1. Use MongoDB Compass for database management
+2. Implement proper indexing for performance
+3. Use MongoDB aggregation pipeline for complex queries
+4. Use transactions for multi-document operations
+5. Implement proper backup strategy using mongodump
+6. Use MongoDB Atlas for production deployment
 
 ## Tiếng Việt
 
@@ -125,7 +127,7 @@ npm run test:e2e
 
 1. Cài đặt Flutter SDK
 2. Cài đặt Node.js và npm
-3. Cài đặt PostgreSQL
+3. Cài đặt MongoDB
 4. Cài đặt Docker và Docker Compose
 5. Cài đặt Android Studio / Xcode
 6. Cài đặt VS Code với các extension được khuyến nghị
@@ -139,6 +141,7 @@ npm run test:e2e
 - GitLens
 - Docker
 - Kubernetes
+- MongoDB for VS Code
 
 ### Cấu Trúc Dự Án
 
@@ -228,8 +231,9 @@ npm run test:e2e
 
 #### Cơ Sở Dữ Liệu
 
-1. Sử dụng migrations cho thay đổi schema
-2. Triển khai đánh index phù hợp
-3. Tối ưu hóa truy vấn
-4. Sử dụng transactions khi cần thiết
-5. Triển khai chiến lược sao lưu phù hợp
+1. Sử dụng MongoDB Compass để quản lý cơ sở dữ liệu
+2. Triển khai đánh index phù hợp cho hiệu suất
+3. Sử dụng MongoDB aggregation pipeline cho các truy vấn phức tạp
+4. Sử dụng transactions cho các thao tác đa tài liệu
+5. Triển khai chiến lược sao lưu phù hợp sử dụng mongodump
+6. Sử dụng MongoDB Atlas cho triển khai production

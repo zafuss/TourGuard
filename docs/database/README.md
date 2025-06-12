@@ -2,214 +2,174 @@
 
 ## English
 
-### Users Table
+### Users Collection
 
-```sql
-CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
+```javascript
+{
+  _id: ObjectId,
+  email: String,  // unique
+  passwordHash: String,
+  name: String,
+  role: String,
+  createdAt: Date,
+  updatedAt: Date
+}
+
+// Indexes
+db.users.createIndex({ "email": 1 }, { unique: true })
+db.users.createIndex({ "role": 1 })
 ```
 
-### Groups Table
+### Groups Collection
 
-```sql
-CREATE TABLE groups (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    max_distance INTEGER NOT NULL,
-    created_by UUID REFERENCES users(id),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
+```javascript
+{
+  _id: ObjectId,
+  name: String,
+  description: String,
+  maxDistance: Number,
+  createdBy: ObjectId,  // reference to users._id
+  members: [{
+    userId: ObjectId,   // reference to users._id
+    role: String,
+    status: String,
+    joinedAt: Date,
+    leftAt: Date
+  }],
+  createdAt: Date,
+  updatedAt: Date
+}
+
+// Indexes
+db.groups.createIndex({ "createdBy": 1 })
+db.groups.createIndex({ "members.userId": 1 })
+db.groups.createIndex({ "members.status": 1 })
 ```
 
-### Group Members Table
+### Locations Collection
 
-```sql
-CREATE TABLE group_members (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    group_id UUID REFERENCES groups(id),
-    user_id UUID REFERENCES users(id),
-    role VARCHAR(50) NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    joined_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    left_at TIMESTAMP WITH TIME ZONE,
-    UNIQUE(group_id, user_id)
-);
+```javascript
+{
+  _id: ObjectId,
+  userId: ObjectId,     // reference to users._id
+  groupId: ObjectId,    // reference to groups._id
+  location: {
+    type: "Point",
+    coordinates: [longitude, latitude]  // GeoJSON format
+  },
+  accuracy: Number,
+  timestamp: Date
+}
+
+// Indexes
+db.locations.createIndex({ "userId": 1 })
+db.locations.createIndex({ "groupId": 1 })
+db.locations.createIndex({ "timestamp": 1 })
+db.locations.createIndex({ "location": "2dsphere" })  // Geospatial index
 ```
 
-### Locations Table
+### Notifications Collection
 
-```sql
-CREATE TABLE locations (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(id),
-    group_id UUID REFERENCES groups(id),
-    latitude DECIMAL(10, 8) NOT NULL,
-    longitude DECIMAL(11, 8) NOT NULL,
-    accuracy DECIMAL(10, 2),
-    timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT valid_latitude CHECK (latitude BETWEEN -90 AND 90),
-    CONSTRAINT valid_longitude CHECK (longitude BETWEEN -180 AND 180)
-);
+```javascript
+{
+  _id: ObjectId,
+  userId: ObjectId,     // reference to users._id
+  groupId: ObjectId,    // reference to groups._id
+  type: String,
+  message: String,
+  read: Boolean,
+  createdAt: Date
+}
 
--- Add PostGIS extension for geospatial queries
-CREATE EXTENSION IF NOT EXISTS postgis;
-
--- Add spatial index
-CREATE INDEX locations_spatial_idx ON locations USING GIST (ST_SetSRID(ST_MakePoint(longitude, latitude), 4326));
-```
-
-### Notifications Table
-
-```sql
-CREATE TABLE notifications (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(id),
-    group_id UUID REFERENCES groups(id),
-    type VARCHAR(50) NOT NULL,
-    message TEXT NOT NULL,
-    read BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-### Indexes
-
-```sql
--- Users
-CREATE INDEX users_email_idx ON users(email);
-CREATE INDEX users_role_idx ON users(role);
-
--- Groups
-CREATE INDEX groups_created_by_idx ON groups(created_by);
-
--- Group Members
-CREATE INDEX group_members_group_id_idx ON group_members(group_id);
-CREATE INDEX group_members_user_id_idx ON group_members(user_id);
-CREATE INDEX group_members_status_idx ON group_members(status);
-
--- Locations
-CREATE INDEX locations_user_id_idx ON locations(user_id);
-CREATE INDEX locations_group_id_idx ON locations(group_id);
-CREATE INDEX locations_timestamp_idx ON locations(timestamp);
-
--- Notifications
-CREATE INDEX notifications_user_id_idx ON notifications(user_id);
-CREATE INDEX notifications_group_id_idx ON notifications(group_id);
-CREATE INDEX notifications_read_idx ON notifications(read);
+// Indexes
+db.notifications.createIndex({ "userId": 1 })
+db.notifications.createIndex({ "groupId": 1 })
+db.notifications.createIndex({ "read": 1 })
 ```
 
 ## Tiếng Việt
 
-### Bảng Users
+### Collection Users
 
-```sql
-CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
+```javascript
+{
+  _id: ObjectId,
+  email: String,  // unique
+  passwordHash: String,
+  name: String,
+  role: String,
+  createdAt: Date,
+  updatedAt: Date
+}
+
+// Chỉ mục
+db.users.createIndex({ "email": 1 }, { unique: true })
+db.users.createIndex({ "role": 1 })
 ```
 
-### Bảng Groups
+### Collection Groups
 
-```sql
-CREATE TABLE groups (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    max_distance INTEGER NOT NULL,
-    created_by UUID REFERENCES users(id),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
+```javascript
+{
+  _id: ObjectId,
+  name: String,
+  description: String,
+  maxDistance: Number,
+  createdBy: ObjectId,  // tham chiếu đến users._id
+  members: [{
+    userId: ObjectId,   // tham chiếu đến users._id
+    role: String,
+    status: String,
+    joinedAt: Date,
+    leftAt: Date
+  }],
+  createdAt: Date,
+  updatedAt: Date
+}
+
+// Chỉ mục
+db.groups.createIndex({ "createdBy": 1 })
+db.groups.createIndex({ "members.userId": 1 })
+db.groups.createIndex({ "members.status": 1 })
 ```
 
-### Bảng Group Members
+### Collection Locations
 
-```sql
-CREATE TABLE group_members (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    group_id UUID REFERENCES groups(id),
-    user_id UUID REFERENCES users(id),
-    role VARCHAR(50) NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    joined_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    left_at TIMESTAMP WITH TIME ZONE,
-    UNIQUE(group_id, user_id)
-);
+```javascript
+{
+  _id: ObjectId,
+  userId: ObjectId,     // tham chiếu đến users._id
+  groupId: ObjectId,    // tham chiếu đến groups._id
+  location: {
+    type: "Point",
+    coordinates: [longitude, latitude]  // định dạng GeoJSON
+  },
+  accuracy: Number,
+  timestamp: Date
+}
+
+// Chỉ mục
+db.locations.createIndex({ "userId": 1 })
+db.locations.createIndex({ "groupId": 1 })
+db.locations.createIndex({ "timestamp": 1 })
+db.locations.createIndex({ "location": "2dsphere" })  // chỉ mục không gian địa lý
 ```
 
-### Bảng Locations
+### Collection Notifications
 
-```sql
-CREATE TABLE locations (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(id),
-    group_id UUID REFERENCES groups(id),
-    latitude DECIMAL(10, 8) NOT NULL,
-    longitude DECIMAL(11, 8) NOT NULL,
-    accuracy DECIMAL(10, 2),
-    timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT valid_latitude CHECK (latitude BETWEEN -90 AND 90),
-    CONSTRAINT valid_longitude CHECK (longitude BETWEEN -180 AND 180)
-);
+```javascript
+{
+  _id: ObjectId,
+  userId: ObjectId,     // tham chiếu đến users._id
+  groupId: ObjectId,    // tham chiếu đến groups._id
+  type: String,
+  message: String,
+  read: Boolean,
+  createdAt: Date
+}
 
--- Thêm extension PostGIS cho truy vấn không gian địa lý
-CREATE EXTENSION IF NOT EXISTS postgis;
-
--- Thêm chỉ mục không gian
-CREATE INDEX locations_spatial_idx ON locations USING GIST (ST_SetSRID(ST_MakePoint(longitude, latitude), 4326));
-```
-
-### Bảng Notifications
-
-```sql
-CREATE TABLE notifications (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(id),
-    group_id UUID REFERENCES groups(id),
-    type VARCHAR(50) NOT NULL,
-    message TEXT NOT NULL,
-    read BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-### Các Chỉ Mục
-
-```sql
--- Users
-CREATE INDEX users_email_idx ON users(email);
-CREATE INDEX users_role_idx ON users(role);
-
--- Groups
-CREATE INDEX groups_created_by_idx ON groups(created_by);
-
--- Group Members
-CREATE INDEX group_members_group_id_idx ON group_members(group_id);
-CREATE INDEX group_members_user_id_idx ON group_members(user_id);
-CREATE INDEX group_members_status_idx ON group_members(status);
-
--- Locations
-CREATE INDEX locations_user_id_idx ON locations(user_id);
-CREATE INDEX locations_group_id_idx ON locations(group_id);
-CREATE INDEX locations_timestamp_idx ON locations(timestamp);
-
--- Notifications
-CREATE INDEX notifications_user_id_idx ON notifications(user_id);
-CREATE INDEX notifications_group_id_idx ON notifications(group_id);
-CREATE INDEX notifications_read_idx ON notifications(read);
+// Chỉ mục
+db.notifications.createIndex({ "userId": 1 })
+db.notifications.createIndex({ "groupId": 1 })
+db.notifications.createIndex({ "read": 1 })
 ```
